@@ -1,150 +1,218 @@
 package org.cmbozeman.forge.mods.serialcraft;
 
-import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import jssc.SerialPort;
-import jssc.SerialPortEvent;
-import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 import jssc.SerialPortList;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
+import scala.actors.threadpool.Arrays;
 
-// Client side detecting of serial communication
-public class SerialCraftListener implements SerialPortEventListener {
-	public SerialPort serialPort;
-	public StringBuilder buffer; // assuming we're reading ASCII text from serial port
+// Client side management of serial ports
+public class SerialCraftListener {
+	private Map<String, SerialPortIO> ports;
+	private Map<String, SerialEventHandler> handlers;
 	
     public SerialCraftListener() {
-    	buffer = new StringBuilder();
-    	String[] portNames = SerialPortList.getPortNames();
-    	System.out.println("in SerialCraftListener constructor");
-    	if(portNames.length > 0) {
-	    	System.out.print("Connecting to port ");
-	    	System.out.println(portNames[0]);
-	        serialPort = new SerialPort(portNames[0]); 
-	        try {
-	            serialPort.openPort();//Open port
-	            serialPort.setParams(115200, 8, 1, 0);//Set params
-	            int mask = SerialPort.MASK_RXCHAR;//Prepare mask
-	            serialPort.setEventsMask(mask);//Set mask
-	            serialPort.addEventListener(this);//Add SerialPortEventListener
-	            System.out.println("Successfully connected to serial port");
-	        } catch (SerialPortException ex) {
-	            System.out.println(ex);
-	        }
-    	} else {
-    		System.out.println("no port names found");
-    	}
+    	ports = new HashMap<String, SerialPortIO>();
+    	handlers = new HashMap<String, SerialEventHandler>();
+    	
+    	handlers.put("chat", new SerialEventHandler() {
+    		public void handler(String args) {
+        		MinecraftForge.EVENT_BUS.post(new SerialCraftChatEvent(
+                        Minecraft.getMinecraft().thePlayer, 
+                        args
+                   )
+                  );
+    		}
+    	});
+    	
+    	handlers.put("redstone", new SerialEventHandler() {
+    		public void handler(String args_str) {
+        		try {
+    	    		System.out.println(args_str);
+    	    		String[] args = args_str.split(" ");
+    	
+    	    		MinecraftForge.EVENT_BUS.post(new SerialCraftRedstoneEvent(
+    	                    Minecraft.getMinecraft().thePlayer, 
+    	                    Integer.parseInt(args[0]),
+    	                    args[1]
+    	               )
+    	              );
+        		} catch(Exception e) {
+        			System.out.println(e);
+        		}
+    		}
+    	});
+    	
+    	handlers.put("time", new SerialEventHandler() {
+    		public void handler(String args) {
+        		MinecraftForge.EVENT_BUS.post(new SerialCraftTimeEvent(Minecraft.getMinecraft().thePlayer, args));
+    		}
+    	});
+    	
+    	handlers.put("move_forward", new SerialEventHandler() {
+    		public void handler(String args) {
+        		if(args.equals("forward")) {
+        		    ClientProxy.getMovementController().moveForward();
+        		} else if(args.equals("back")) {
+        			ClientProxy.getMovementController().moveBack();
+        		} else {
+        			ClientProxy.getMovementController().stopForwardMovement();
+        		}
+    		}
+    	});
+    	
+    	handlers.put("move_speed", new SerialEventHandler() {
+    		public void handler(String arg) {
+        		if(arg.equals("sprint")) {
+        		    ClientProxy.getMovementController().sprint();
+        		} else if(arg.equals("sneak")) {
+        			ClientProxy.getMovementController().sneak();
+        		} else {
+        			ClientProxy.getMovementController().normalMovementSpeed();
+        		}
+    		}
+    	});
+    	
+    	handlers.put("move_strafe", new SerialEventHandler() {
+    		public void handler(String arg) {
+        		if(arg.equals("left")) {
+        		    ClientProxy.getMovementController().moveLeft();
+        		} else if(arg.equals("right")) {
+        			ClientProxy.getMovementController().moveRight();
+        		} else {
+        			ClientProxy.getMovementController().stopStrafeMovement();
+        		}
+    		}
+    	});
+    	
+    	handlers.put("start_jumping", new SerialEventHandler() {
+    		public void handler(String arg) {
+    			ClientProxy.getMovementController().startJumping();
+    		}
+    	});
+    	
+    	handlers.put("stop_jumping", new SerialEventHandler() {
+    		public void handler(String arg) {
+    			ClientProxy.getMovementController().stopJumping();
+    		}
+    	});
+    	
+    	handlers.put("m",  new SerialEventHandler() {
+    		public void handler(String str) {
+        		String[] args = str.split(" ");
+        		try {
+        		    int x = Integer.parseInt(args[0]);
+        		    int y = Integer.parseInt(args[1]);
+        			ClientProxy.getMovementController().moveMouseWithJoystick(x, y);
+        		} catch(Exception e) {
+        			System.out.println(e);
+        		}
+    		}
+    	});
+    	
+    	handlers.put("move_down", new SerialEventHandler() {
+    		public void handler(String arg) {
+        		ClientProxy.getMovementController().moveDown();
+    		}
+    	});
+    	
+    	handlers.put("stop_move_down", new SerialEventHandler() {
+    		public void handler(String arg) {
+        		ClientProxy.getMovementController().stopMovingDown();
+    		}
+    	});
+    	
+    	handlers.put("left_button_press", new SerialEventHandler() {
+    		public void handler(String arg) {
+    			ClientProxy.getMovementController().leftMousePress();
+    		}
+    	});
+    	
+    	handlers.put("left_button_release", new SerialEventHandler() {
+    		public void handler(String arg) {
+    			ClientProxy.getMovementController().leftMouseRelease();
+    		}
+    	});
+    	
+    	handlers.put("right_button_press", new SerialEventHandler() {
+    		public void handler(String arg) {
+    	    	ClientProxy.getMovementController().rightMousePress();
+    		}
+    	});
+    	
+    	handlers.put("right_button_release", new SerialEventHandler() {
+    		public void handler(String arg) {
+    			ClientProxy.getMovementController().rightMouseRelease(); 
+    		}
+    	});
     }
     
     public void triggerEvent(String str) {
-    	// TODO build dictionary of events rather than huge if statement
-    	// split on white space and use first argument as event type
-    	if(str.startsWith("chat ")) {
-    		MinecraftForge.EVENT_BUS.post(new SerialCraftChatEvent(
-    				                           Minecraft.getMinecraft().thePlayer, 
-    				                           str.substring(5)
-    				                      )
-    				                     );
-    	} else if(str.startsWith("redstone ")) {
-    		try {
-	    		System.out.println(str);
-	    		String[] args = str.substring(9).split(" "); // TODO handle no provided ID
-	
-	    		MinecraftForge.EVENT_BUS.post(new SerialCraftRedstoneEvent(
-	                    Minecraft.getMinecraft().thePlayer, 
-	                    Integer.parseInt(args[0]),
-	                    args[1]
-	               )
-	              );
-    		} catch(Exception e) {
-    			System.out.println(e);
-    		}
-    	} else if(str.startsWith("time ")) {
-    		MinecraftForge.EVENT_BUS.post(new SerialCraftTimeEvent(Minecraft.getMinecraft().thePlayer, str));
-    	} else if(str.startsWith("move_forward ")) {
-    		String arg = str.substring(13);
-    		if(arg.equals("forward")) {
-    		    ClientProxy.movementController.moveForward();
-    		} else if(arg.equals("back")) {
-    			ClientProxy.movementController.moveBack();
-    		} else {
-    			ClientProxy.movementController.stopForwardMovement();
-    		}
-    	} else if(str.startsWith("move_speed ")) {
-    		String arg = str.substring(11);
-    		if(arg.equals("sprint")) {
-    		    ClientProxy.movementController.sprint();
-    		} else if(arg.equals("sneak")) {
-    			ClientProxy.movementController.sneak();
-    		} else {
-    			ClientProxy.movementController.normalMovementSpeed();
-    		}
-    	} else if(str.startsWith("move_strafe ")) {
-    		String arg = str.substring(12);
-    		if(arg.equals("left")) {
-    		    ClientProxy.movementController.moveLeft();
-    		} else if(arg.equals("right")) {
-    			ClientProxy.movementController.moveRight();
-    		} else {
-    			ClientProxy.movementController.stopStrafeMovement();
-    		}
-    	} else if(str.equals("start_jumping")) {
-			ClientProxy.movementController.startJumping();
-    	} else if(str.equals("stop_jumping")) {
-			ClientProxy.movementController.stopJumping();
-    	} else if(str.startsWith("m ")) {
-    		String[] args = str.substring(2).split(" ");
-    		try {
-    		    int x = Integer.parseInt(args[0]);
-    		    int y = Integer.parseInt(args[1]);
-    			ClientProxy.movementController.moveMouseWithJoystick(x, y);
-    		} catch(Exception e) {
-    			System.out.println(e);
-    		}
-    	} else if(str.equals("move_down")) {
-    		ClientProxy.movementController.moveDown();
-    	} else if(str.equals("stop_move_down")) {
-    		ClientProxy.movementController.stopMovingDown();
-    	} else if(str.equals("left_button_press")) {
-    		ClientProxy.movementController.leftMousePress();
-    	} else if(str.equals("left_button_release")) {
-    		ClientProxy.movementController.leftMouseRelease();
-    	} else if(str.equals("right_button_press")) {
-    		ClientProxy.movementController.rightMousePress();
-    	} else if(str.equals("right_button_release")) {
-    		ClientProxy.movementController.rightMouseRelease(); 
+    	int index = str.indexOf(' ');
+    	String msg = str;
+    	String args = "";
+    	
+    	if(index >= 0) {
+    		msg = str.substring(0, index);
+    	    args = str.substring(index+1);
+    	}
+    	
+    	//System.out.println("received message: " + msg + ", with args: " + args);
+    	
+    	SerialEventHandler h = handlers.get(msg);
+    	if(h != null) {
+    		h.handler(args);;
+    	}
+    }
+    
+    public void updatePorts() {
+    	String[] portNames = SerialPortList.getPortNames();
+        List<String> portNamesList = Arrays.asList(portNames);
+        for(Map.Entry<String, SerialPortIO> entry : ports.entrySet()) {
+            if(!portNamesList.contains(entry.getKey())) {
+            	entry.getValue().disconnect();
+            	ports.remove(entry.getKey());
+            }
+        }
+    }
+    
+    public int getBaudRate(String name) {
+        return ports.get(name).getBaudRate();
+    }
+    
+    public boolean isPortConnected(String name) {
+    	return ports.containsKey(name);
+    }
+    
+    public void connectPort(String name, int baud) {
+    	try {
+    		SerialPortIO port = new SerialPortIO(name, baud);
+    		
+    		ports.put(name, port);
+    	} catch(SerialPortException e) {
+    		System.out.println(e);
+    	}
+    }
+    
+    public void disconnectPort(String name) {
+    	if(ports.containsKey(name)) {
+    		
+        	ports.get(name).disconnect();
+        	ports.remove(name);
     	}
     }
     
     public void sendSerialMessage(String msg) {
     	try {
-    		if(serialPort != null) {
-                serialPort.writeString(msg);
+    		for(Map.Entry<String, SerialPortIO> entry : ports.entrySet()) {
+    			entry.getValue().sendMessage(msg);
     		}
     	} catch(SerialPortException ex) {
     		System.out.println(ex);
     	}
-    }
-    
-    public void serialEvent(SerialPortEvent event) {
-        if(event.isRXCHAR()){//If data is available
-            try {
-            	int value = event.getEventValue();
-                byte data[] = serialPort.readBytes(value);
-                buffer.append(new String(data, StandardCharsets.UTF_8)); // assuming we're reading ASCII text from serial port
-                int index = buffer.indexOf("\r\n"); // and are looking for lines that end with carriage return line feed (like Arduino's Serial.println)
-                while(index != -1) {
-            	    String strEvent = buffer.substring(0,index);
-            	    buffer.delete(0, index+2);
-            	    triggerEvent(strEvent);
-                	index = buffer.indexOf("\r\n");
-                }
-            } catch (SerialPortException ex) {
-                System.out.println(ex);
-            }
-            
-        }
     }
 }

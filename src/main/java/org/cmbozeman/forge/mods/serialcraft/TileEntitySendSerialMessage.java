@@ -59,8 +59,8 @@ public class TileEntitySendSerialMessage extends TileEntity
     	if(this.worldObj.isRemote) {
     	    System.out.println("client received " + action + " " + param);
     	    // TODO make minecraft forge event that is posted to the event bus
-    	    if(SerialCraft.serialCraftListener != null) {
-    	        SerialCraft.serialCraftListener.sendSerialMessage(" " + param + " ");
+    	    if(ClientProxy.getSerialCraftListener() != null) {
+    	        ClientProxy.getSerialCraftListener().sendSerialMessage(" " + param + " ");
     	    } else {
     	        System.out.println("serialCraftListener not initialized correctly");
     	    }

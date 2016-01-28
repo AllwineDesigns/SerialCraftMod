@@ -1,12 +1,29 @@
 package org.cmbozeman.forge.mods.serialcraft;
 
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
-	public static MovementController movementController;
+	private static MovementController movementController;
+	private static SerialCraftListener serialCraftListener;
+	
+	public static MovementController getMovementController() {
+	    return movementController;
+	}
+	
+	public static SerialCraftListener getSerialCraftListener() {
+		return serialCraftListener;
+	}
+	
+	@Override
+    public void preinit(FMLPreInitializationEvent event) {
+		super.preinit(event);
+	}
+	
 	
     @Override
     public void init(FMLInitializationEvent event) {
@@ -17,7 +34,7 @@ public class ClientProxy extends CommonProxy {
     	SerialCraftClientEventHandling events = new SerialCraftClientEventHandling();
     	
     	MinecraftForge.EVENT_BUS.register(events);
-    	SerialCraft.serialCraftListener = new SerialCraftListener();
+    	serialCraftListener = new SerialCraftListener();
     	movementController = new MovementController();
     }
     
@@ -28,6 +45,11 @@ public class ClientProxy extends CommonProxy {
 
             Minecraft.getMinecraft().displayGuiScreen(new GuiSerialRedstone((TileEntitySerialRedstone)world.getTileEntity(x, y, z))); 
     	}
+    }
+    
+    @Override
+    public void openConfigGUI() {
+        Minecraft.getMinecraft().displayGuiScreen(new ConfigGUI());
     }
 
 }

@@ -30,7 +30,7 @@ public class SerialCraftClientEventHandling {
     public void onTimeEvent(SerialCraftTimeEvent event) {
     	if(event.getPlayer() != null) {
     		if(event.getPlayer() instanceof EntityClientPlayerMP) {
-    	        ((EntityClientPlayerMP)event.getPlayer()).sendChatMessage("/" + event.getMessage());
+    	        ((EntityClientPlayerMP)event.getPlayer()).sendChatMessage("/time " + event.getMessage());
     		}
     	}
     }
