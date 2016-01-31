@@ -11,9 +11,7 @@ public class CommonProxy {
 
 	@EventHandler
     public void preinit(FMLPreInitializationEvent event) {
-		System.out.println("in CommonProxy preinit");
-		FMLCommonHandler.instance().bus().register(new KeyInputHandler());
-		KeyBindings.init();
+
 	}
 	
     @EventHandler

@@ -2,6 +2,7 @@ package org.cmbozeman.forge.mods.serialcraft;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
+import net.minecraft.client.Minecraft;
 
 public class KeyInputHandler {
 

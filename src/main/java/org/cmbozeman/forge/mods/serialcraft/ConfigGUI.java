@@ -39,7 +39,7 @@ public class ConfigGUI extends GuiScreen {
             textfield.setText(String.valueOf(baud));
     		buttonList.add(button);
     		textfields.add(textfield);
-    		y += 10;
+    		y += 25;
     	}
     }
     
@@ -57,7 +57,7 @@ public class ConfigGUI extends GuiScreen {
     	int y = 25;
     	for(String portName : portNames) {
     		this.fontRendererObj.drawString(portName, 255, y, 0xffffffff, true);
-    		y += 10;
+    		y += 25;
     	}
     	
     	for(GuiTextField textfield : textfields) {

@@ -1,6 +1,6 @@
 package org.cmbozeman.forge.mods.serialcraft;
 
-import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.client.Minecraft;
@@ -22,6 +22,10 @@ public class ClientProxy extends CommonProxy {
 	@Override
     public void preinit(FMLPreInitializationEvent event) {
 		super.preinit(event);
+		
+		System.out.println("in CommonProxy preinit");
+		FMLCommonHandler.instance().bus().register(new KeyInputHandler());
+		KeyBindings.init();
 	}
 	
 	

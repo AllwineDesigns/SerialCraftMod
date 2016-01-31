@@ -8,7 +8,6 @@ import jssc.SerialPortException;
 import jssc.SerialPortList;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
-import scala.actors.threadpool.Arrays;
 
 // Client side management of serial ports
 public class SerialCraftListener {
@@ -169,11 +168,24 @@ public class SerialCraftListener {
     	}
     }
     
+    public static <T> boolean contains(final T[] array, final T v) {
+        if (v == null) {
+            for (final T e : array)
+                if (e == null)
+                    return true;
+        } else {
+            for (final T e : array)
+                if (e == v || v.equals(e))
+                    return true;
+        }
+
+        return false;
+    }
+    
     public void updatePorts() {
     	String[] portNames = SerialPortList.getPortNames();
-        List<String> portNamesList = Arrays.asList(portNames);
         for(Map.Entry<String, SerialPortIO> entry : ports.entrySet()) {
-            if(!portNamesList.contains(entry.getKey())) {
+            if(!contains(portNames, entry.getKey())) {
             	entry.getValue().disconnect();
             	ports.remove(entry.getKey());
             }
