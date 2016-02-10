@@ -129,9 +129,10 @@ public class MovementController {
     	GameSettings gs = Minecraft.getMinecraft().gameSettings;
     	KeyBinding.setKeyBindState(gs.keyBindSneak.getKeyCode(), false);  
     }
-    public void moveMouseWithJoystick(int x, int y) { // dx and dy range from -512 to 511
-    	float dx = ((float)x)/512;
-	    float dy = ((float)y)/512;
+    public void moveMouseWithJoystick(int x, int y) { 
+        // dx and dy range from -512 to 511 with updates expected to come about 60 times a second
+    	float dx = ((float)x)/64;
+	    float dy = ((float)y)/64;
 	    Minecraft mc = Minecraft.getMinecraft();
     	if(mc.inGameHasFocus && Display.isActive()) {
 	        if(mc.gameSettings.invertMouse) {
