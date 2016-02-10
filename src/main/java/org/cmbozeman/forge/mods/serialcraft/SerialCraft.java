@@ -36,7 +36,7 @@ public class SerialCraft {
     public void init(FMLInitializationEvent event) {
     	proxy.init(event);
     	
-    	System.out.println("in init on SerialCraft");
+    	//System.out.println("in init on SerialCraft");
     	
     	network = NetworkRegistry.INSTANCE.newSimpleChannel("MyChannel");
     	network.registerMessage(SerialRedstoneMessage.Handler.class, SerialRedstoneMessage.class, 0, Side.SERVER);

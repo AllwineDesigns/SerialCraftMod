@@ -130,7 +130,7 @@ public class MovementController {
     	KeyBinding.setKeyBindState(gs.keyBindSneak.getKeyCode(), false);  
     }
     public void moveMouseWithJoystick(int x, int y) { 
-        // dx and dy range from -512 to 511 with updates expected to come about 60 times a second
+    	// dx and dy range from -512 to 511 and updates are expected to come about 60 times a second
     	float dx = ((float)x)/64;
 	    float dy = ((float)y)/64;
 	    Minecraft mc = Minecraft.getMinecraft();

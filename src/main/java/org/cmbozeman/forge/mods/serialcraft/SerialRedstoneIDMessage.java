@@ -62,7 +62,7 @@ public class SerialRedstoneIDMessage implements IMessage {
 
 		@Override
 		public IMessage onMessage(SerialRedstoneIDMessage message, MessageContext ctx) {
-			System.out.println("setting id for redstone serial block " + message.getX() + ", " + message.getY() + ", " + message.getZ() + " - " + message.getID());
+			//System.out.println("setting id for redstone serial block " + message.getX() + ", " + message.getY() + ", " + message.getZ() + " - " + message.getID());
 			
 			World world = ctx.getServerHandler().playerEntity.worldObj;
 			TileEntity te = world.getTileEntity(message.getX(), message.getY(),  message.getZ());

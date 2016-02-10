@@ -9,7 +9,7 @@ public class KeyBindings {
 	 public static KeyBinding openConfigGUI;
 
 	 public static void init() {
-		System.out.println("in KeyBindings init");
+		//System.out.println("in KeyBindings init");
 	    openConfigGUI = new KeyBinding("key.openConfigGUI", Keyboard.KEY_K, "key.categories.serialcraft");
 
 	    ClientRegistry.registerKeyBinding(openConfigGUI);

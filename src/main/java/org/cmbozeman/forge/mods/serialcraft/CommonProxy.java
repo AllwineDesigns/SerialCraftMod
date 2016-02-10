@@ -25,7 +25,6 @@ public class CommonProxy {
     }
     
     public void openSerialRedstoneGUI(World world, int x, int y, int z) {
-    	System.out.println("in openSerialRedstoneGUI on CommonProxy");
 
     }
     

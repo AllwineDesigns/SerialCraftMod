@@ -23,7 +23,6 @@ public class ClientProxy extends CommonProxy {
     public void preinit(FMLPreInitializationEvent event) {
 		super.preinit(event);
 		
-		System.out.println("in CommonProxy preinit");
 		FMLCommonHandler.instance().bus().register(new KeyInputHandler());
 		KeyBindings.init();
 	}
@@ -32,9 +31,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init(FMLInitializationEvent event) {
     	super.init(event);
-    	
-    	System.out.println("in init on ClientProxy");
-    	
+    	    	
     	SerialCraftClientEventHandling events = new SerialCraftClientEventHandling();
     	
     	MinecraftForge.EVENT_BUS.register(events);
@@ -45,8 +42,6 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void openSerialRedstoneGUI(World world, int x, int y, int z) {
     	if(world.isRemote) {
-        	System.out.println("in openSerialRedstoneGUI on ClientProxy");
-
             Minecraft.getMinecraft().displayGuiScreen(new GuiSerialRedstone((TileEntitySerialRedstone)world.getTileEntity(x, y, z))); 
     	}
     }

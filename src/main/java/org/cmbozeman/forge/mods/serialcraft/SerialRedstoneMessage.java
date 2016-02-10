@@ -37,7 +37,7 @@ public class SerialRedstoneMessage implements IMessage {
 
 		@Override
 		public IMessage onMessage(SerialRedstoneMessage message, MessageContext ctx) {
-			System.out.println("in onMessage(SerialRedstoneMessage message, MessageContext ctx)");
+			//System.out.println("in onMessage(SerialRedstoneMessage message, MessageContext ctx)");
 			World world = ctx.getServerHandler().playerEntity.worldObj;
 			List<TileEntity> allTEs = ctx.getServerHandler().playerEntity.worldObj.loadedTileEntityList;
 			for(TileEntity te : allTEs) {
@@ -46,7 +46,7 @@ public class SerialRedstoneMessage implements IMessage {
 		            if (te.blockType instanceof BlockSerialRedstone)
 		            {
 		            	if(((TileEntitySerialRedstone)te).getRedstoneID().equals(message.id)) {
-		            		System.out.println("found a tileentity with the same ID as redstone event");
+		            		//System.out.println("found a tileentity with the same ID as redstone event");
 		                    ((TileEntitySerialRedstone)te).setRedstonePower(message.power);
 		                    world.markBlockForUpdate(te.xCoord, te.yCoord, te.zCoord);
 		                    world.setBlockMetadataWithNotify(te.xCoord, te.yCoord, te.zCoord, message.power, 3);

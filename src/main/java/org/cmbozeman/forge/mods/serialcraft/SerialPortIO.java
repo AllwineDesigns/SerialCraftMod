@@ -17,15 +17,15 @@ public class SerialPortIO implements SerialPortEventListener  {
 	public SerialPortIO(String portName, int b) throws SerialPortException {
 		baud = b;
     	buffer = new StringBuilder();
-    	System.out.print("Connecting to port ");
-    	System.out.println(portName);
+    	//System.out.print("Connecting to port ");
+    	//System.out.println(portName);
         serialPort = new SerialPort(portName); 
         serialPort.openPort();//Open port
         serialPort.setParams(baud, 8, 1, 0);//Set params
         int mask = SerialPort.MASK_RXCHAR;//Prepare mask
         serialPort.setEventsMask(mask);//Set mask
         serialPort.addEventListener(this);//Add SerialPortEventListener
-        System.out.println("Successfully connected to serial port");
+        //System.out.println("Successfully connected to serial port");
 	}
 	
 	public void sendMessage(String str) throws SerialPortException {

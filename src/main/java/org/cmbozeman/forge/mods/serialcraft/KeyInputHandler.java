@@ -9,7 +9,7 @@ public class KeyInputHandler {
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
         if(KeyBindings.openConfigGUI.isPressed()) {
-            System.out.println("Open config GUI!!");
+            //System.out.println("Open config GUI!!");
             SerialCraft.proxy.openConfigGUI();
         }
     }

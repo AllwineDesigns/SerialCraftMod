@@ -17,11 +17,11 @@ public class SerialCraftClientEventHandling {
     
     @SubscribeEvent
     public void onRedstoneEvent(SerialCraftRedstoneEvent event) {
-    	System.out.println("in OnRedstoneEvent");
+    	//System.out.println("in OnRedstoneEvent");
     	if(event.getPlayer() != null) {
-    		System.out.println("player is not null");
-    		System.out.println(event.getPower());
-    		System.out.println(event.getID());
+    		//System.out.println("player is not null");
+    		//System.out.println(event.getPower());
+    		//System.out.println(event.getID());
     	    SerialCraft.network.sendToServer(new SerialRedstoneMessage(event.getPower(), event.getID()));
     	}
     }

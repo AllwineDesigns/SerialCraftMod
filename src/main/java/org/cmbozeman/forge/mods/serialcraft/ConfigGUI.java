@@ -20,7 +20,7 @@ public class ConfigGUI extends GuiScreen {
         
     	textfields = new ArrayList<GuiTextField>();
      // DEBUG
-     System.out.println("ConfigGUI initGUI()");
+     //System.out.println("ConfigGUI initGUI()");
         buttonList.clear();
         
     	portNames = SerialPortList.getPortNames();
@@ -83,16 +83,16 @@ public class ConfigGUI extends GuiScreen {
     
     @Override
     protected void actionPerformed(GuiButton b) {
-    	System.out.println("button pressed");
-    	System.out.println(b);
+    	//System.out.println("button pressed");
+    	//System.out.println(b);
     	SerialCraftListener sc = ClientProxy.getSerialCraftListener();
     	String connect = I18n.format("serialcraft.connect", new Object[0]);
     	String disconnect = I18n.format("serialcraft.disconnect", new Object[0]);
 
         for(int i = 0; i < buttonList.size(); i++) {
-        	System.out.println(i + ": " + buttonList.get(i));
+        	//System.out.println(i + ": " + buttonList.get(i));
         	if(buttonList.get(i) == b) {
-        		System.out.println("clicked button " + i);
+        		//System.out.println("clicked button " + i);
         		int baud = 115200;
         		try {
         		    baud = Integer.parseInt(textfields.get(i).getText());

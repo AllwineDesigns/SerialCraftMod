@@ -26,7 +26,7 @@ public class GuiSerialRedstone extends GuiScreen {
     public void initGui() 
     {
      // DEBUG
-     System.out.println("GuiSerialRedstone initGUI()");
+     //System.out.println("GuiSerialRedstone initGUI()");
         buttonList.clear();
 
         buttonDone = new GuiButton(0, 100,150,  98, 20, I18n.format("gui.done", new Object[0]));
@@ -84,9 +84,9 @@ public class GuiSerialRedstone extends GuiScreen {
     {
      if (parButton == buttonDone)
      {
-    	 System.out.println("in actionPerformed");
-    	 System.out.println(SerialCraft.network);
-    	 System.out.println(tileEntity);
+    	 //System.out.println("in actionPerformed");
+    	 //System.out.println(SerialCraft.network);
+    	 //System.out.println(tileEntity);
     	 SerialCraft.network.sendToServer(new SerialRedstoneIDMessage(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, redstoneID));
          mc.displayGuiScreen((GuiScreen)null);
      }

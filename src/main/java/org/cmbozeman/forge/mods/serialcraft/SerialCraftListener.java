@@ -7,6 +7,8 @@ import java.util.Map;
 import jssc.SerialPortException;
 import jssc.SerialPortList;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
 
 // Client side management of serial ports
@@ -17,6 +19,18 @@ public class SerialCraftListener {
     public SerialCraftListener() {
     	ports = new HashMap<String, SerialPortIO>();
     	handlers = new HashMap<String, SerialEventHandler>();
+    	
+    	handlers.put("hotbar", new SerialEventHandler() {
+    		public void handler(String args) {
+    	    	int hotbar = 0;
+    	    	try {
+    	    		hotbar = Integer.parseInt(args)-1;
+    	    	} catch(Exception e) {
+    	    		System.out.println(e);
+    	    	}
+    	    	Minecraft.getMinecraft().thePlayer.inventory.currentItem = hotbar;
+    		}
+    	});
     	
     	handlers.put("chat", new SerialEventHandler() {
     		public void handler(String args) {
@@ -31,7 +45,7 @@ public class SerialCraftListener {
     	handlers.put("redstone", new SerialEventHandler() {
     		public void handler(String args_str) {
         		try {
-    	    		System.out.println(args_str);
+    	    		//System.out.println(args_str);
     	    		String[] args = args_str.split(" ");
     	
     	    		MinecraftForge.EVENT_BUS.post(new SerialCraftRedstoneEvent(
