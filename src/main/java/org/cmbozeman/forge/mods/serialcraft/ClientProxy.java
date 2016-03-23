@@ -10,6 +10,11 @@ import net.minecraftforge.common.MinecraftForge;
 public class ClientProxy extends CommonProxy {
 	private static MovementController movementController;
 	private static SerialCraftListener serialCraftListener;
+	private static ClientState clientState;
+	
+	public static ClientState getClientState() {
+		return clientState;
+	}
 	
 	public static MovementController getMovementController() {
 	    return movementController;
@@ -35,14 +40,16 @@ public class ClientProxy extends CommonProxy {
     	SerialCraftClientEventHandling events = new SerialCraftClientEventHandling();
     	
     	MinecraftForge.EVENT_BUS.register(events);
+    	FMLCommonHandler.instance().bus().register(events);
     	serialCraftListener = new SerialCraftListener();
     	movementController = new MovementController();
+    	clientState = new ClientState();
     }
     
     @Override
     public void openSerialRedstoneGUI(World world, int x, int y, int z) {
     	if(world.isRemote) {
-            Minecraft.getMinecraft().displayGuiScreen(new GuiSerialRedstone((TileEntitySerialRedstone)world.getTileEntity(x, y, z))); 
+            Minecraft.getMinecraft().displayGuiScreen(new GuiSerialRedstone(world.getTileEntity(x, y, z))); 
     	}
     }
     

@@ -6,7 +6,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -23,13 +25,11 @@ public class BlockSendSerialMessage extends BlockContainer
     
 
     @Override()
-    public void onBlockAdded(World world, int x, int y, int z) {
-    	super.onBlockAdded(world,x,y,z);
-        if (!world.isRemote)
-        {
-           // Minecraft.getMinecraft().displayGuiScreen(new GuiSerialRedstone((TileEntitySerialRedstone)world.getTileEntity(x, y, z))); 
-        }
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemstack) {
+        super.onBlockPlacedBy(world, x, y, z, entity, itemstack);
+    	SerialCraft.proxy.openSerialRedstoneGUI(world, x, y, z);
     }
+
     
     @Override()
     public void onNeighborBlockChange(World world, int x, int y, int z, Block b) {

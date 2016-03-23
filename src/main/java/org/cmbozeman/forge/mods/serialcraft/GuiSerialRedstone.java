@@ -1,21 +1,20 @@
 package org.cmbozeman.forge.mods.serialcraft;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.tileentity.TileEntity;
 
 public class GuiSerialRedstone extends GuiScreen {
     private GuiButton buttonDone;
     private GuiTextField textField;
     private String redstoneID;
     
-    private TileEntitySerialRedstone tileEntity;
+    private TileEntity tileEntity;
 
     
-    public GuiSerialRedstone(TileEntitySerialRedstone te) {
+    public GuiSerialRedstone(TileEntity te) {
     	tileEntity = te;
     }
     

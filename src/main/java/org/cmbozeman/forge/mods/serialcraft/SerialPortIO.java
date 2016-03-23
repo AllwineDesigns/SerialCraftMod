@@ -28,6 +28,10 @@ public class SerialPortIO implements SerialPortEventListener  {
         //System.out.println("Successfully connected to serial port");
 	}
 	
+	public void sendMessage(byte[] bytes) throws SerialPortException {
+		serialPort.writeBytes(bytes);
+	}
+	
 	public void sendMessage(String str) throws SerialPortException {
 		serialPort.writeString(str);
 	}

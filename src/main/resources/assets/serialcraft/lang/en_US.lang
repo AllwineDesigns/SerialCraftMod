@@ -1,3 +1,4 @@
 tile.serialRedstone.name=Serial Redstone
+tile.sendSerialMessageBlock.name=Redstone Serial Message
 serialcraft.connect=Connect
 serialcraft.disconnect=Disconnect

@@ -72,7 +72,14 @@ public class SerialRedstoneIDMessage implements IMessage {
 			        sr.setID(message.getID());
 			        world.markBlockForUpdate(message.getX(), message.getY(), message.getZ());
 				}
+			} else if(te instanceof TileEntitySendSerialMessage) {
+				TileEntitySendSerialMessage sm = (TileEntitySendSerialMessage)te;
+				if(sm.getSerialMessage().equals("message")) {
+			        sm.setSerialMessage(message.getID());
+			        world.markBlockForUpdate(message.getX(), message.getY(), message.getZ());
+				}
 			}
+			
 			return null; // no response in this case
 		}
 

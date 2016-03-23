@@ -57,10 +57,11 @@ public class TileEntitySendSerialMessage extends TileEntity
     @Override
     public boolean receiveClientEvent(int action, int param) {
     	if(this.worldObj.isRemote) {
-    	    //System.out.println("client received " + action + " " + param);
+    	    System.out.println("client received " + action + " " + param + " " + serialMessage);
+    	    
     	    // TODO make minecraft forge event that is posted to the event bus
     	    if(ClientProxy.getSerialCraftListener() != null) {
-    	        ClientProxy.getSerialCraftListener().sendSerialMessage(" " + param + " ");
+    	        ClientProxy.getSerialCraftListener().sendRedstoneMessage(param, serialMessage);
     	    } else {
     	       // System.out.println("serialCraftListener not initialized correctly");
     	    }

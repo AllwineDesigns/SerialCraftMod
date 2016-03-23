@@ -1,14 +1,15 @@
 package org.cmbozeman.forge.mods.serialcraft;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import jssc.SerialPortException;
 import jssc.SerialPortList;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.GameSettings;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
 
 // Client side management of serial ports
@@ -102,6 +103,22 @@ public class SerialCraftListener {
     		}
     	});
     	
+    	handlers.put("update_player_info",  new SerialEventHandler() {
+    	    public void handler(String arg) {
+    	    	System.out.println("in update player info");
+    	    	SerialCraftListener serial = ClientProxy.getSerialCraftListener();
+        		ClientState state = ClientProxy.getClientState();
+        		EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+        		state.setHealth(player.getHealth());
+        		state.setFoodLevel(player.getFoodStats().getFoodLevel());
+        		state.setAir(player.getAir());
+        		
+        	    serial.sendHealthMessage((int)player.getHealth());
+        		serial.sendFoodLevelMessage(state.getFoodLevel());
+        		serial.sendAirMessage(player.getAir());
+    	    }
+    	});
+    	
     	handlers.put("start_jumping", new SerialEventHandler() {
     		public void handler(String arg) {
     			ClientProxy.getMovementController().startJumping();
@@ -174,7 +191,7 @@ public class SerialCraftListener {
     	    args = str.substring(index+1);
     	}
     	
-    	//System.out.println("received message: " + msg + ", with args: " + args);
+    	System.out.println("received message: " + msg + ", with args: " + args);
     	
     	SerialEventHandler h = handlers.get(msg);
     	if(h != null) {
@@ -232,10 +249,75 @@ public class SerialCraftListener {
     	}
     }
     
-    public void sendSerialMessage(String msg) {
+    public void sendCreeperMessage(int dist) {
+    	ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    	
+    	stream.write((byte)4);
+    	stream.write((byte)dist);
+    	
+    	sendSerialMessage(stream.toByteArray());
+    }
+    
+    public void sendHealthMessage(int health) {
+    	ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    	
+    	stream.write((byte)1);
+    	stream.write((byte)health);
+    	    	
+    	sendSerialMessage(stream.toByteArray());
+    }
+    
+    public void sendFoodLevelMessage(int foodLevel) {
+    	ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    	
+    	stream.write((byte)2);
+    	stream.write((byte)foodLevel);
+    	
+    	sendSerialMessage(stream.toByteArray());
+    }
+    
+    
+    public void sendAirMessage(int air) {
+    	ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    	
+    	stream.write((byte)3);
+    	stream.write((byte)(air >> 8));
+    	stream.write((byte)air);
+    	
+    	sendSerialMessage(stream.toByteArray());
+    }
+    
+    public void sendRedstoneMessage(int redstoneSignal, String id) {
+    	ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    	
+    	stream.write((byte)0); // redstone message type
+    	stream.write((byte)redstoneSignal); // strength of the redstone signal 0-15
+
+    	try {
+    		byte[] bytes = id.getBytes("UTF-8");
+			stream.write(bytes, 0, bytes.length);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	sendSerialMessage(stream.toByteArray());
+    }
+    
+    public void sendSerialMessage(byte[] msg) {
+    	ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    	
+    	stream.write((byte)1);
+    	stream.write((byte)'S');
+    	stream.write((byte)'C');
+    	stream.write((byte)msg.length);
+    	stream.write(msg, 0, msg.length);
+    	
+    	byte[] scMsg = stream.toByteArray();
+    	//System.out.println(scMsg);
     	try {
     		for(Map.Entry<String, SerialPortIO> entry : ports.entrySet()) {
-    			entry.getValue().sendMessage(msg);
+    			entry.getValue().sendMessage(scMsg);
     		}
     	} catch(SerialPortException ex) {
     		System.out.println(ex);
