@@ -11,7 +11,7 @@ public class TileEntitySerialRedstone extends TileEntity
 {
 	private int redstonePower = 0;
 	private String redstoneID = "default";
-	
+
     public int getRedstonePower() {
     	return redstonePower;
     }
@@ -52,11 +52,16 @@ public class TileEntitySerialRedstone extends TileEntity
         writeToNBT(tagCompound);
         return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, tagCompound);
     }
-    
+
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
     {
         this.redstonePower = pkt.func_148857_g().getInteger("redstonePower");
+    }
+
+    @Override
+    public void updateEntity() {
+        super.updateEntity();
     }
 
 }
