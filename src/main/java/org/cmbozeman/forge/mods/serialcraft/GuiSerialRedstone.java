@@ -1,4 +1,4 @@
-package org.cmbozeman.forge.mods.serialcraft;
+package com.allwinedesigns.forge.mods.serialcraft;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;

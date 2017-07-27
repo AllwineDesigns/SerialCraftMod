@@ -1,4 +1,4 @@
-package org.cmbozeman.forge.mods.serialcraft;
+package com.allwinedesigns.forge.mods.serialcraft;
 
 import java.util.List;
 

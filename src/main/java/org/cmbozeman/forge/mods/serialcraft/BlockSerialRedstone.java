@@ -1,4 +1,4 @@
-package org.cmbozeman.forge.mods.serialcraft;
+package com.allwinedesigns.forge.mods.serialcraft;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
