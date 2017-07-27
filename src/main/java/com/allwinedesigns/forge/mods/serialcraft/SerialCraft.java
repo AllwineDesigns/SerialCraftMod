@@ -22,8 +22,8 @@ public class SerialCraft {
 	
     
     @SidedProxy(
-    	      clientSide="org.cmbozeman.forge.mods.serialcraft.ClientProxy", 
-    	      serverSide="org.cmbozeman.forge.mods.serialcraft.CommonProxy"
+    	      clientSide="com.allwinedesigns.forge.mods.serialcraft.ClientProxy", 
+    	      serverSide="com.allwinedesigns.forge.mods.serialcraft.CommonProxy"
     	    )
     public static CommonProxy proxy;
     
